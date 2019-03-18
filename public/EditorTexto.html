@@ -9,7 +9,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+    <script src="lib/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js"></script>
+    <script src="lib/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
 	<link rel="shortcut icon" type="image/x-icon" href="assets/ipn.jpg">
+    <script src="lib/summernote0.8.11/lang/summernote-es-ES.js"></script>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,7 +21,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-    <a class="navbar-brand" href="#">Bienvenido</a>
+    <a id="bienvenido" class="navbar-brand" href="#">Bienvenido</a>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
         <a class="nav-link" href="#">Nuevo Documento <span class="sr-only">(current)</span></a>
@@ -26,20 +30,20 @@
         <a class="nav-link" href="#">Guardar Documento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Cerrar Documento</a>
+        <a class="nav-link"  href="#" >Cerrar Documento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Compartir Documento</a>
+        <a class="nav-link" href="#" data-toggle="popover" data-placement="bottom" id="compartir">Compartir Documento</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Iniciar Votacion</a>
+        <a class="nav-link" href="#" data-toggle="popover" data-placement="bottom" id="votacion">Iniciar Votación</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Cambiar Permisos</a>
+        <a class="nav-link" href="#" data-toggle="popover" data-placement="bottom" id="permisos">Cambiar Permisos</a>
       </li>
-      
+
     </ul>
-    
+
   </div>
 </nav>
 <div id="summernote"></div>

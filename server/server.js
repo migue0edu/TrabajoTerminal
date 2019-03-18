@@ -2,7 +2,10 @@ require('./config/config');
 const express = require('express');
 const path = require('path');
 const app = express();
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use( require('./routes/index') );
 
 const publicPath = path.resolve(__dirname, '../public');

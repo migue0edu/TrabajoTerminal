@@ -8,3 +8,7 @@ $('.toggle').click(function(){
 	}, "slow")
 });
 
+function validate( formulario ) {
+
+}
+

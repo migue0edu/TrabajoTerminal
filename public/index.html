@@ -14,21 +14,21 @@
 	
 	<div class="formulario">
 		<h2>Iniciar Sesión</h2>
-		<form action="#">
-			<input type="text" placeholder="Usuario:" required>
-			<input type="password" placeholder="Contraseña:" required>
+		<form action="/login" method="post">
+			<input id="user" name="user" type="text" placeholder="Usuario:" required>
+			<input id="passw" name="pass" type="password" placeholder="Contraseña:" required>
 			<input type="submit" value="Iniciar Sesión">
 		</form>
 	</div>
 
 		<div class="formulario">
 		<h2>Crear Cuenta</h2>
-		<form action="#">
-			<input type="text" placeholder="Usuario:" required>
-			<input type="password" placeholder="Contraseña:" required>
-			<input type="text" placeholder="Nombre(s):" required>
-			<input type="text" placeholder="Apellidos:" required>
-			<input type="email" placeholder="Correo Electronico:" required>
+		<form action="" >
+			<input id="newUser" name="user" type="text" placeholder="Usuario:" required>
+			<input id="newPassw" name="pass" type="password" placeholder="Contraseña:" required>
+			<input id="nombre" name="nombre" type="text" placeholder="Nombre(s):" required>
+			<input id="apellidos" name="apellidos" type="text" placeholder="Apellidos:" required>
+			<input id="correo" name="correo" type="email" placeholder="Correo Electronico:" required>
 			<input type="submit" value="Registrarse">
 		</form>
 	</div>

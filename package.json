@@ -16,7 +16,11 @@
     "bootstrap": "^4.3.1",
     "express": "^4.16.4",
     "jquery": "^3.3.1",
+    "mongoose": "^5.4.19",
     "node": "^11.10.0",
-    "popper": "^1.0.1"
+    "popper": "^1.0.1",
+    "popper.js": "^1.14.7",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
   }
 }
