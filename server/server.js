@@ -14,4 +14,5 @@ app.use(express.static(publicPath));
 app.listen(process.env.PORT, () =>{
   console.log('Escuchano puerto: ', process.env.PORT);
   console.log('hola');
+  console.log('prueba2');
 });
