@@ -1,29 +1,42 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use( express.static(path.resolve(__dirname, '../../public')));
+const Usuario = require('../Modelo/usuario');
 
 app.post('/login', (req, res) => {
+
     let body = req.body;
-    //res.json(body);
-    let user = body.user;
-    let passw = body.pass;
-    if(user === 'migue0mpx@gmail.com' && passw === 'qwerty'){
-        res.sendFile(path.resolve(__dirname, '../../public/EditorTexto.html'));
-    }
-    if(user === 'alfredo@hotmail.com' && passw === 'alf1234'){
-        res.sendFile(path.resolve(__dirname, '../../public/EditorTexto.html'));
-    }
-    if(user === 'prueba1@gmail.com' && passw === 'prueba1'){
-        res.sendFile(path.resolve(__dirname, '../../public/EditorTexto.html'));
-    }
+    Usuario.findOne({  Correo: body.email },(err,UsuarioDB) =>{
+            /*Usuario.find({},'Nombre Contrasena').exec((err,usuarios)=>{
+                res.json({usuarios});
+            })*/
 
-    if(user === 'bereniceunam@gmail.com' && passw === '1234'){
-        res.sendFile(path.resolve(__dirname, '../../public/EditorTexto.html'));
-    }
+            console.log(body.email);
 
+
+            if(err){
+                return res.status(400).json({err});
+            }
+
+            if(!UsuarioDB){
+                return res.json({err : {mensaje: 'Usuario no encontrado'}});
+            }
+
+           if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === true) {
+
+
+
+                    //Crear pagina de sesion donde aprecen los documentos creados del usuario
+                    console.log('Login correcto');
+
+           }else{
+                    res.sendFile(path.resolve(__dirname,"../../public/index.html"));
+           } 
+
+
+
+
+    })
 });
 
 
