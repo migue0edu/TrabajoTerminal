@@ -43,6 +43,5 @@ $(function () {
     })
 });
 
-// let paramsSearch = new URLSearchParams();
-// let user = paramsSearch.get('usr');
-// $("#bienvenido").append(' ' + user);
+
+Together.config("TogetherJSConfig_dontShowClicks", false);

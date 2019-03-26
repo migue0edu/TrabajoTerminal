@@ -9,12 +9,12 @@ app.post('/registro', (req,res)=>{
 	let body = req.body;
 	let textohtml ='<div>'
 		+ '<input type="button" value="Confirmar Correo">'
-		+ '</div>'
+		+ '</div>';
 	var transporter = nodemailer.createTransport({
   	service: 'gmail',
   	auth: {
-    user: 'djbrush1122@gmail.com',
-    pass: '2011080169'
+    user: 'miguelrodriguezdev@gmail.com',
+    pass: 'Qwertyuiop0'
   			},
   			tls: {
         	rejectUnauthorized: false
@@ -22,9 +22,9 @@ app.post('/registro', (req,res)=>{
 	});
 
 var mailOptions = {
-  from: 'djbrush1122@gmail.com',
+  from: 'miguelrodriguezdev@gmail.com',
   to: body.email,
-  subject: 'Pruebas',
+  subject: 'Prueba',
   text: 'That was easy!',
   html: textohtml
 };

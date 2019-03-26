@@ -12,8 +12,6 @@ app.post('/login', (req, res) => {
             })*/
 
             console.log(body.email);
-
-
             if(err){
                 return res.status(400).json({err});
             }
@@ -22,12 +20,11 @@ app.post('/login', (req, res) => {
                 return res.json({err : {mensaje: 'Usuario no encontrado'}});
             }
 
-           if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === true) {
+           if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === false) {
 
-
-
-                    //Crear pagina de sesion donde aprecen los documentos creados del usuario
-                    console.log('Login correcto');
+               //Crear pagina de sesion donde aprecen los documentos creados del usuario
+               console.log('Login correcto');
+               res.sendFile(path.resolve(__dirname,"../../public/EditorTexto.html"));
 
            }else{
                     res.sendFile(path.resolve(__dirname,"../../public/index.html"));
