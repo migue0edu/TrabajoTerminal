@@ -24,7 +24,8 @@ app.post('/login', (req, res) => {
 
                //Crear pagina de sesion donde aprecen los documentos creados del usuario
                console.log('Login correcto');
-               res.sendFile(path.resolve(__dirname,"../../public/EditorTexto.html"));
+               res.redirect('/editor');
+               //res.sendFile(path.resolve(__dirname,"../../public/EditorTexto.html"));
 
            }else{
                     res.sendFile(path.resolve(__dirname,"../../public/index.html"));
