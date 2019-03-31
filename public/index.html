@@ -3,10 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Log in</title>
-	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<!--<link rel="stylesheet" type="text/css" href="css/estilos.css">-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="shortcut icon" type="image/x-icon" href="assets/ipn.jpg">
+	<style>
+		.bd-placeholder-img {
+			font-size: 1.125rem;
+			text-anchor: middle;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		@media (min-width: 768px) {
+			.bd-placeholder-img-lg {
+				font-size: 3.5rem;
+			}
+		}
+	</style>
+	<!-- Custom styles for this template -->
+	<link href="css/signin.css" rel="stylesheet">
 </head>
-<body>
+<!--<body>--><!--
 	<div class="contenedor-form">
 		<div class="toggle">
 		<span> Crear Cuenta</span>
@@ -26,18 +45,43 @@
 		<form action="/registro" method="post" >
 			<input id="correo" name="email" type="email" placeholder="Correo Electronico:" required>
 			<input id="newPassw" name="pass" type="password" placeholder="Contraseña:" required>
-			<input id="nombre" name="nombre" type="text" placeholder="Nombre(s):" required>
-			<input id="apellidos" name="apellidos" type="text" placeholder="Apellidos:" required>			
-			<input type="submit" value="Registrarse">
+
 		</form>
 	</div>
 	<div class="reset-password">
 		<a href="RecuperarContrasena.html">¿Olvidaste tu contraseña?</a>
 	</div>
 
- 	</div>
+ 	</div>-->
 
- 	<script src="js/jquery-3.1.1.min.js"></script>
- 	<script src="js/main.js"></script>
+<body>
+<div class="col-4"></div>
+<div class="col-4 card card text-white bg-dark border-secondary text-center" style="width: 20rem;">
+<form class="form-signin" action="/login" method="post">
+	<img class="mb-4 rounded-circle" src="/assets/escom.jpg" alt="" width="72" height="72">
+	<h1 class="h4 mb-3 font-weight-normal">Iniciar Sesión</h1>
+
+	<input id="user" name="email" type="email" class="form-control" placeholder="Correo electronico:" required autofocus>
+	<br>
+	<input id="passw" name="pass" type="password" class="form-control" placeholder="Contraseña:" required>
+	<br>
+	<button class="btn btn-outline-info"type="submit" >Iniciar sesión</button>
+
+
+
+</form>
+	<a href="Registro.html">
+
+		<button class="btn btn-outline-warning">Registrarse</button>
+
+	</a>
+	<p class="mt-5 mb-3 text-muted"><a href="">¿Olvidaste tu contraseña?</p></a>
+</div>
+<div class="col-4"></div>
+
+
+
 </body>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/main.js"></script>
 </html>
