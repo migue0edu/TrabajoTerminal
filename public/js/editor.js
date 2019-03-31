@@ -120,4 +120,22 @@ $(function () {
     })
 });
 
+//--------
 
+function nuevoDocumento(){
+    if(confirm('Desea guardar cambios?')){
+        console.log('Guardado!')
+    }
+    else{
+        $('#summernote').summernote('code', "");
+    }
+}
+
+function cerrarDocumento(){
+    if(confirm('Desea guardar cambios?')){
+        console.log('Guardado!')
+    }
+    else{
+        window.location.href = "index.html";
+    }  
+}

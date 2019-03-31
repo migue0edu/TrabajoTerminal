@@ -3,11 +3,12 @@ const path = require('path');
 const app = express();
 const Usuario = require('../Modelo/usuario');
 
-app.get('/activarUsuario/:id', (req, res) => {
-	let id =  req.params.id;
-	//res.json({id});
+app.post('/recuperarContrasena', (req, res) =>{
+	let body = req.body;
+	let id = body.id;
+	let pass = body.newpass;
 
-	Usuario.findByIdAndUpdate(id,{Estatus: 'true'},{new:true, runValidators: true}, (err, User) => {
+	Usuario.findByIdAndUpdate(id,{Contrasena: pass},{new:true, runValidators: true}, (err, User) => {
 		if(err){
 			return res.status(400).json({err});
 		}
@@ -18,5 +19,3 @@ app.get('/activarUsuario/:id', (req, res) => {
 		res.json({User});
 	})
 });
-
-module.exports = app;

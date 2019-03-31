@@ -6,6 +6,7 @@ app.use( require('./login'));
 app.use( require('./registro'));
 app.use( require('./editor'));
 app.use( require('./enviarInvitacion'));
+app.use( require('./activarUsuario'));
 
 
 module.exports = app;

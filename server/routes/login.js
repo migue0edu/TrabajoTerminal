@@ -20,7 +20,7 @@ app.post('/login', (req, res) => {
                 return res.json({err : {mensaje: 'Usuario no encontrado'}});
             }
 
-           if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === false) {
+           if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === true) {
 
                //Crear pagina de sesion donde aprecen los documentos creados del usuario
                console.log('Login correcto');

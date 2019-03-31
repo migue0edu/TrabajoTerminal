@@ -7,37 +7,7 @@ var nodemailer = require('nodemailer');
 
 app.post('/registro', (req,res)=>{
 	let body = req.body;
-	let textohtml ='<div>'
-		+ '<input type="button" value="Confirmar Correo">'
-		+ '</div>';
-	var transporter = nodemailer.createTransport({
-  	service: 'gmail',
-  	auth: {
-    user: 'miguelrodriguezdev@gmail.com',
-    pass: 'Qwertyuiop0'
-  			},
-  			tls: {
-        	rejectUnauthorized: false
-    }
-	});
 
-var mailOptions = {
-  from: 'miguelrodriguezdev@gmail.com',
-  to: body.email,
-  subject: 'Prueba',
-  text: 'That was easy!',
-  html: textohtml
-};
-
-transporter.sendMail(mailOptions, function(error, info){
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Email sent: ' + info.response);
-  }
-});
-
-	
 	let NuevoUsuario = new Usuario({
 
 		Nombre: body.nombre,
@@ -51,8 +21,40 @@ transporter.sendMail(mailOptions, function(error, info){
 		if(err){
 			return res.json({err});
 		}
+		console.log(UsuarioDB._id.toString());
+		let textohtml = '<div><a href="http://localhost:3000/activarUsuario/'+UsuarioDB._id.toString()+'">Activar Cuenta</a></div>';
+		//'<form action="/activarUsuario" method="post">'
+		//+ '<input name="id" type="hidden" value="'+UsuarioDB._id.toString()+'"/>'
+		//+ '<input type="submit" value="Confirmar Correo"/>'
+		//+ '</form>';
+		var transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+		user: 'miguelrodriguezdev@gmail.com',
+		pass: 'Qwertyuiop0'
+					},
+					tls: {
+		    	rejectUnauthorized: false
+		}
+		});
 
-		res.json({UsuarioDB});
+		var mailOptions = {
+		from: 'miguelrodriguezdev@gmail.com',
+		to: body.email,
+		subject: 'Prueba',
+		text: 'That was easy!',
+		html: textohtml
+		};
+
+		transporter.sendMail(mailOptions, function(error, info){
+			if (error) {
+			console.log(error);
+			} else {
+			console.log('Email sent: ' + info.response);
+			}
+		});
+		//res.sendFile(path.resolve(__dirname,"../../public/espera_confirmacion.html"));
+		//res.json({UsuarioDB});
 	})
 
 
