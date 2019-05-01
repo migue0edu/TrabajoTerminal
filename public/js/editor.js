@@ -1,3 +1,4 @@
+
 $('#summernote').summernote({
         placeholder: 'Introduzca su texto aquí.',
         tabsize: 5,
@@ -139,3 +140,8 @@ function cerrarDocumento(){
         window.location.href = "index.html";
     }  
 }
+
+function setPropietary(name) {
+    propietary = TogetherJS.require("peers").Self.name;
+    //TogetherJS.require("peers").Self.update({name: "migue0mpx@gmail.com"});
+};

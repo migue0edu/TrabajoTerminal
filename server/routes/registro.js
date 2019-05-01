@@ -53,7 +53,7 @@ app.post('/registro', (req,res)=>{
 			console.log('Email sent: ' + info.response);
 			}
 		});
-		//res.sendFile(path.resolve(__dirname,"../../public/espera_confirmacion.html"));
+		res.sendFile(path.resolve(__dirname,"../../public/espera_confirmacion.html"));
 		//res.json({UsuarioDB});
 	})
 

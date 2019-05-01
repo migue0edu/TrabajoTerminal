@@ -3,6 +3,3 @@ $(document).ready(function() {
     lang: 'es-ES'
   });
 });
-
-
-Toge
