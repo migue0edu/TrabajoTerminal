@@ -5,3 +5,7 @@ var TogetherJSConfig_suppressJoinConfirmation = true;
 
 var propietary;
 
+TogetherJSConfig_getUserName = function () {
+    ;
+};
+

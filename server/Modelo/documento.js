@@ -11,8 +11,8 @@ let documentoSchema = new Schema({
 		required: true,
 		default: "Documento sin titulo"
 	},
-	Datos: {
-		type: [{ver: Number, contenido: String}],
+	Texto: {
+		type: String,
 		require: false,
 		default: " "
 	},
@@ -20,11 +20,6 @@ let documentoSchema = new Schema({
 	PersonasCompartidas: {
 		type: [Schema.Types.ObjectId],
 		required: false
-	},
-
-	Votacion: {
-		type: {fecha: Date, participantes: [Schema.Types.ObjectId], votos:{si: Number, no: Number}},
-		require: false
 	},
 
 	Version: {
@@ -35,4 +30,4 @@ let documentoSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('Documento',Schema);
+module.exports = mongoose.model('Documento',documentoSchema);

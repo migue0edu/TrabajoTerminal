@@ -16,7 +16,7 @@ $('#summernote').summernote({
             ['debug', ['codeview']]
         ]
       });
-
+$(document).ready()
 
 $(".note-btn").click(function () {
     let contenido = $('#summernote').summernote('code');
@@ -121,6 +121,8 @@ $(function () {
     })
 });
 
+
+
 //--------
 
 function nuevoDocumento(){
@@ -139,6 +141,49 @@ function cerrarDocumento(){
     else{
         window.location.href = "index.html";
     }  
+}
+
+function crearDocumento(){
+    // $.ajax(`documento/create/${document.cookie.split('=')[1]}`)
+    //     .done(function (data) {
+    //         console.log('success', data);
+    //     })
+    //     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+    //         console.log('error', errorThrown);
+    //     });
+    $.ajax({
+        url: `documento/create/${document.cookie.split('=')[1]}`,
+        type: 'post',
+        dataType: 'jsonp',
+        jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+        success: function (data) {
+            console.log('success', data);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log('error', errorThrown);
+        }
+    });
+}
+function guardarDocumento(){
+    // $.ajax(`documento/update/${document.cookie.split('=')[1]}`)
+    //     .done(function (data) {
+    //         console.log('success', data);
+    //     })
+    //     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+    //         console.log('error', errorThrown);
+    //     });
+    $.ajax({
+        url: `documento/update/${document.cookie.split('=')[1]}`,
+        type: 'post',
+        dataType: 'json',
+        jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+        success: function (data) {
+            console.log('success', data);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log('error', errorThrown);
+        }
+    });
 }
 
 function setPropietary(name) {
