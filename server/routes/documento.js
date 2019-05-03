@@ -1,59 +1,59 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
+const path = require('path');
+app.use(session({ secret: 'guinea pig', cookie: { maxAge: 3000*1000 }, resave: false, saveUninitialized: true}));
 const Documento = require('../Modelo/documento');
 const Usuario = require( '../Modelo/usuario');
 
-app.get('/documento/get/:id', (req, res) => {
-    let documentId = req.params.id;
-    Documento.findById(id)
-        .populate('Propietario', 'nombre correo')
-        .exec((err, documento) =>{
-            if(err){
-                return res.status(500).json({
-                    ok: false,
-                    err
-                });
-            }
-            if(!documento){
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        message: 'El ID no es correcto'
-                    }
-                });
-            }
-            res.json({
-                ok: true,
-                documento
-            });
-        });
+app.get('/documento', function(req, res) {
+    if(!req.session.user){
+        return res.redirect('/');
+    }
+
+    res.sendFile(path.resolve(__dirname,"../../public/PaginaPrincipal.html"));
 });
 
-app.post('/documento/create/:id', (req, res) => {
-   let body = req.body;
-   let Documento;
-   Usuario.
-   Usuario.save((err, documento) => {
+app.get('/documento/create', async function (req, res) {
 
-       Documento = new Documento({
-           Propietario: id
-       })
-   });
+    // if(!req.session.user){
+    //     res.redirect('/');
+    // }
+    let nuevoDoc = new Documento({
+        Propietario: req.session.user
+    });
 
+   let saveDocument =  await nuevoDoc.save();
+   req.session.documentID = saveDocument._id;
+    res.redirect('/editor');
 });
 
-app.post('/documento/update/:id', (req, res) => {
-    Documento.findByIdAndUpdate(id, {new: true, titulo, texto, runValidators: true}, (err, DocumentoDB) => {
+// app.post('/documento/save', (req, res) => {
+//    req.session.tempDoc.save((err, doc) => {
+//        req.session.guardado = true;
+//        if(!err)
+//            res.status(201).json({
+//                guardado: req.session.guardado
+//            });
+//    })
+// });
+
+app.post('/documento/update', (req, res) => {
+    let body = req.body;
+    let id = body.idocument;
+    let texto = body.texto;
+    console.log('Body: ', body);
+    Documento.findOneAndUpdate( id, {new: true, texto, runValidators: true}, (err, DocumentoDB) => {
        if(!DocumentoDB){
            return res.status(400).json({
                ok: false,
                err
            });
        }
-        res.json({
-            ok: true
-        })
+
+       res.redirect('/editor');
     });
+    res.status(201);
 });
 
 module.exports = app;

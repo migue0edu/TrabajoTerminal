@@ -28,6 +28,7 @@ let documentoSchema = new Schema({
 		default: 1
 	}
 
+
 });
 
 module.exports = mongoose.model('Documento',documentoSchema);

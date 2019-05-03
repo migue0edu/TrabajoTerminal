@@ -31,7 +31,7 @@
         <a class="nav-link" onclick="nuevoDocumento()">Nuevo Documento <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" onclick="guardarDocumento()">Guardar Documento</a>
+          <a class="nav-link" href="#" data-toggle="popover" data-placement="bottom" id="guardar">Guardar Documento</a>
       </li>
       <li class="nav-item">
         <a class="nav-link"  onclick="cerrarDocumento()">Cerrar Documento</a>
@@ -54,6 +54,10 @@
   </div>
 </nav>
 <div id="summernote"></div>
+<form id="save" action="/documento/update" method="post">
+    <input id="idocument" name="idocument" type="hidden">
+    <input id="text"    name="texto"  type="hidden">
+</form>
  <script src="js/editor.js"></script>
 </body>
 </html>

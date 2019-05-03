@@ -12,3 +12,7 @@ function validate( formulario ) {
 
 }
 
+function getUser() {
+	let user = document.cookie.split('=')[1];
+	$('#user').val(user);
+}

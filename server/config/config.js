@@ -1,6 +1,5 @@
 /*Puerto del servidor*/
 process.env.PORT = process.env.PORT || 3000;
-/*Conexion con la base de datos local*/
 //Base de datos local
 let lorcalUrlDB = 'mongodb://localhost:27017/TrabajoTerminal';
 //Base de datos remota

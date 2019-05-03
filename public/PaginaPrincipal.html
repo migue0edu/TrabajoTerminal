@@ -18,84 +18,131 @@
       }
       </style>
     </head>
-    <body>            
-        <h2 class="text-white">&nbsp &nbsp !Bienvenido¡</h2>
-        <div class="card-deck mt-5 ml-3 mr-3">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="text-center">Crear Documento <i class="far fa-file" style="color: green;"></i></h4>
-                </div>
-                <div class="card-body">
-                    <div id="new" class="carousel slide" data-ride="carousel">
-                        <!-- Indicators -->
-                        <ul class="carousel-indicators">
-                            <li data-target="#new" data-slide-to="0" class="active"></li>
-                            <li data-target="#new" data-slide-to="1"></li>
-                            <li data-target="#new" data-slide-to="2"></li>
-                        </ul>  
-                        <!-- The slideshow -->
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                              <img src="../assets/1.jpg" alt="Información 1"  width="1000" height="500">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../assets/2.jpg" alt="Información 2" width="1000" height="500">
-                            </div>
-                            <div class="carousel-item">
-                              <img src="../assets/3.jpg" alt="Información 3" width="1000" height="500">
-                            </div>
-                        </div>
-          
-                        <!-- Left and right controls -->
-                        <a class="carousel-control-prev" href="#new" data-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </a>
-                        <a class="carousel-control-next" href="#new" data-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </a>
-                    </div>
-                </div>            
-                <div class="card-footer">
-                    <a href="" class="btn btn-outline-success btn-sm offset-xl-5">Nuevo Documento</a>
-                </div>            
+    <body>
+    <div class="row mr-3">
+        <div class="col-6">
+            <h2 class="text-white mt-1">&nbsp &nbsp Bienvenido</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a href="/documento/create" class="btn btn-success btn-sm mt-3">Crear Nuevo Documento</a>
+        </div>
+    </div>
+    <div class="card-deck mt-4 ml-3 mr-3">
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="text-center">Abrir Documento <i class="far fa-folder-open" style="color: orange;"></i></h4>
             </div>
-            <div class="card ">
-                <div class="card-header">
-                    <h4 class="text-center">Abrir Documento <i class="far fa-folder-open" style="color: orange;"></i></h4>
-                </div>
-                <div class="card-body">
-                    <div id="open" class="carousel slide" data-ride="carousel">
-                        <!-- Indicators -->
-                        <ul class="carousel-indicators">
-                            <li data-target="#open" data-slide-to="0" class="active"></li>
-                            <li data-target="#open" data-slide-to="1"></li>
-                            <li data-target="#open" data-slide-to="2"></li>
-                        </ul>  
-                        <!-- The slideshow -->
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                              <img src="../assets/5.jpg" alt="Información 1" width="1000" height="500">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../assets/6bien.jpg" alt="Información 2" width="1000" height="500">
-                            </div>
-                            <div class="carousel-item">
-                              <img src="../assets/4bien.jpg" alt="Información 3" width="1000" height="500">
-                            </div>
-                        </div>  
-                        <!-- Left and right controls -->
-                        <a class="carousel-control-prev" href="#open" data-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </a>
-                        <a class="carousel-control-next" href="#open" data-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </a>
+            <div class="card-body">
+                <div id="open" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ul class="carousel-indicators">
+                        <li data-target="#open" data-slide-to="0" class="active"></li>
+                        <li data-target="#open" data-slide-to="1"></li>
+                        <li data-target="#open" data-slide-to="2"></li>
+                    </ul>
+                    <!-- The slideshow -->
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="../assets/5.jpg" alt="Información 1" width="1000" height="500">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="../assets/6bien.jpg" alt="Información 2" width="1000" height="500">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="../assets/4.jpg" alt="Información 3" width="1000" height="500">
+                        </div>
                     </div>
-                </div>            
-                <div class="card-footer">
-                    <a href="" >Documento 1</a>
-                </div>            
+                    <!-- Left and right controls -->
+                    <a class="carousel-control-prev" href="#open" data-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </a>
+                    <a class="carousel-control-next" href="#open" data-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer">
+                <table class="table table-hover table-dark table-sm table-responsive-xl">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Nombre</th>
+                        <th scope="col" class="text-center">Versión</th>
+                        <th scope="col" class="text-center">Fecha</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="text-center">Documentos en los que participas <i class="fas fa-users" style="color: blue;"></i>
+                </h4>
+            </div>
+            <div class="card-body">
+                <div id="readd" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ul class="carousel-indicators">
+                        <li data-target="#readd" data-slide-to="0" class="active"></li>
+                        <li data-target="#readd" data-slide-to="1"></li>
+                        <li data-target="#readd" data-slide-to="2"></li>
+                    </ul>
+                    <!-- The slideshow -->
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="../assets/2.jpg" alt="Información 1" width="1000" height="500">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="../assets/1.jpg" alt="Información 2" width="1000" height="500">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="../assets/3.jpg" alt="Información 3" width="1000" height="500">
+                        </div>
+                    </div>
+                    <!-- Left and right controls -->
+                    <a class="carousel-control-prev" href="#readd" data-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </a>
+                    <a class="carousel-control-next" href="#readd" data-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer">
+                <table class="table table-hover table-dark table-sm table-responsive-xl">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Nombre</th>
+                        <th scope="col" class="text-center">Versión</th>
+                        <th scope="col" class="text-center">Fecha</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                        <td class="text-center">hh</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     </body>
 </html>

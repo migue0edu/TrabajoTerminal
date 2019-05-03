@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const Usuario = require('../Modelo/usuario');
+var ip = require('ip');
 var nodemailer = require('nodemailer');
 //const mail = require('mail').Mail({host:"smtp.gmail.com",username:"djbrush1122@gmail.com",password:"2011080169"});
 
 app.post('/registro', (req,res)=>{
 	let body = req.body;
-
+	ip.address();
+	let myIp = ip.toString(new Buffer(ip.toBuffer(ip.address())));
 	let NuevoUsuario = new Usuario({
 
 		Nombre: body.nombre,
@@ -22,7 +24,7 @@ app.post('/registro', (req,res)=>{
 			return res.json({err});
 		}
 		console.log(UsuarioDB._id.toString());
-		let textohtml = '<div><a href="http://localhost:3000/activarUsuario/'+UsuarioDB._id.toString()+'">Activar Cuenta</a></div>';
+		let textohtml = '<div><a href="http://'+myIp+':3000/activarUsuario/'+UsuarioDB._id.toString()+'">Activar Cuenta</a></div>';
 		//'<form action="/activarUsuario" method="post">'
 		//+ '<input name="id" type="hidden" value="'+UsuarioDB._id.toString()+'"/>'
 		//+ '<input type="submit" value="Confirmar Correo"/>'

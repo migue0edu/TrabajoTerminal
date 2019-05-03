@@ -2,18 +2,30 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const session = require('express-session');
-//app.use(session({ secret: 'guinea pig', cookie: { maxAge: 300 }, resave: true, saveUninitialized: true}));
+const Documento = require('../Modelo/documento');
 
 
-app.get('/editor', function (req, res) {
-    //console.log("_id: "+ app.locals.user);
-    console.log("_id: "+ req.session.user);
-    req.session.save(()=>{
-       console.log(`${req.session.id}: Session saved`);
+
+app.get('/editor', async function (req, res) {
+    // if(!req.session.user){
+    //     return res.redirect('/');
+    // }
+
+    // req.session.save(()=>{
+    //     console.log(`${req.session.id}: Session saved`);
+    // });
+    res.cookie('documentoID', req.session.documentID);
+    res.cookie('name', req.session.userName);
+    let doc = await Documento.findById(req.session.documentID,'Texto', (err, document) => {
+        if(err){
+            return res.redirect('/documento');
+        }
+        res.cookie('texto', document.Texto);
+        res.sendFile(path.resolve(__dirname, "../../public/EditorTexto.html"));
     });
-    res.cookie('user', req.session.user);
 
-    res.sendFile(path.resolve(__dirname, "../../public/EditorTexto.html"));
+
+
 });
 
 module.exports = app;

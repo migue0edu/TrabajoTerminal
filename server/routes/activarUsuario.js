@@ -12,7 +12,7 @@ app.get('/activarUsuario/:id', (req, res) => {
 			return res.status(400).json({err});
 		}
 		if(!User){
-			return res,status(400).json({err, men: 'No se encontro el usuario.'});
+			return res.status(400).json({err, men: 'No se encontro el usuario.'});
 		}
 		res.sendFile(path.resolve(__dirname,"../../public/confirmacion_completa.html"));
 		//res.json({User});

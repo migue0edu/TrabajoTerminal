@@ -78,6 +78,7 @@ let htmlCompartir = '<form action="/enviarInvitacion" method="post">'
     +'<div class="input-group-sm mb-3">'
     +'<input id="correo" name="correo" type="text" class="form-control" placeholder="alguien@correo.com" aria-label="Recipient\'s username" aria-describedby="basic-addon2">'
     +'<input id="url" name="urlDoc" type="hidden" >'
+    +'<br>'
     +'<div class="input-group-append">'
     +'<div style="text-align: center;"><input class="btn-sm btn-dark" type="submit" value="Compartir"></div>'
     +'</div>'
@@ -87,7 +88,7 @@ $(function () {
     $("#compartir").popover({
         title: 'Correo electronico:',
         content: htmlCompartir,
-        trigger: 'click',
+        trigger: 'focus',
         placement: 'bottom',
         html: true
     })
@@ -103,7 +104,8 @@ $('#correo').click(function () {
 let htmlText = '<div class="input-group-sm mb-3">'
     +'<span>Indique fecha y hora limite:</span>'
     +'<input type="datetime-local">'
-    +'<div style="text-align: center;"><button class="btn-sm btn-dark" type="button">Establecer</button></div>';
+    +'<br>'
+    +'<div style="text-align: center;"><button class="btn-sm btn-dark mt-3" type="button">Establecer</button></div>';
 
 $('.datepicker').datepicker({
     format: 'mm/dd/yyyy',
@@ -115,13 +117,32 @@ $(function () {
     $("#votacion").popover({
         title: 'Datos de la votación:',
         content: htmlText,
-        trigger: 'click',
+        trigger: 'focus',
         placement: 'bottom',
         html: true
     })
 });
 
+let htmlGuardar =
+    '<form action="/documento/update" method="post">'
+    +'<div class="input-group-sm mb-3">'
+    +'<input id="" name="correo" type="text" class="form-control" placeholder="Nombre del documento" aria-label="Recipient\'s username" aria-describedby="basic-addon2"> '
+    +'<br>'
+    +'<div class="input-group-append">'
+    +'<div style="text-align: center;"><input class="btn btn-outline-dark btn-sm" type="submit" value="Guardar"></div> '
+    +'</div>'
+    +'</div>'
+    +'</form>';
 
+$(function () {
+    $("#guardar").popover({
+        title: 'Guardar Documento',
+        content: htmlGuardar,
+        trigger:'click',
+        placement: 'bottom',
+        html: true
+    })
+});
 
 //--------
 
@@ -144,49 +165,48 @@ function cerrarDocumento(){
 }
 
 function crearDocumento(){
-    // $.ajax(`documento/create/${document.cookie.split('=')[1]}`)
-    //     .done(function (data) {
-    //         console.log('success', data);
-    //     })
-    //     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-    //         console.log('error', errorThrown);
-    //     });
-    $.ajax({
-        url: `documento/create/${document.cookie.split('=')[1]}`,
-        type: 'post',
-        dataType: 'jsonp',
-        jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-        success: function (data) {
-            console.log('success', data);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log('error', errorThrown);
-        }
-    });
+    if(guardado === false){
+        $.ajax({
+            url: `documento/save`,
+            type: 'post',
+            dataType: 'jsonp',
+            jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+            success: function (data) {
+                console.log('success', data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log('error', errorThrown);
+            }
+        });
+    }
+    else{
+        $.ajax({
+            url: `documento/update/`,
+            type: 'post',
+            dataType: 'json',
+            jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+            success: function (data) {
+                console.log('success', data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log('error', errorThrown);
+            }
+        });
+    }
+
 }
 function guardarDocumento(){
-    // $.ajax(`documento/update/${document.cookie.split('=')[1]}`)
-    //     .done(function (data) {
-    //         console.log('success', data);
-    //     })
-    //     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-    //         console.log('error', errorThrown);
-    //     });
-    $.ajax({
-        url: `documento/update/${document.cookie.split('=')[1]}`,
-        type: 'post',
-        dataType: 'json',
-        jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-        success: function (data) {
-            console.log('success', data);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log('error', errorThrown);
-        }
-    });
+    let texto =  $('#summernote').summernote('code');
+    $("#text").val(texto);
+    let id = document.cookie.split('=')[2];
+    $("#idocument").val(id);
+    $("#save").submit();
+
 }
 
 function setPropietary(name) {
     propietary = TogetherJS.require("peers").Self.name;
     //TogetherJS.require("peers").Self.update({name: "migue0mpx@gmail.com"});
 };
+
+var guardado = false;
