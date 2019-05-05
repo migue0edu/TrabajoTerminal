@@ -1,15 +1,21 @@
-//codigo para animacion mostrar registro
-$('.toggle').click(function(){
-	$('.formulario').animate({
-		height: "toggle",
-		'padding-top': 'toggle',
-		'padding-bottom': 'toggle',
-		opacity: 'toggle'
-	}, "slow")
-});
-
-function validate( formulario ) {
-
+function validar() {
+	$.ajax({
+		url: '/login',
+		type: 'POST',
+		data: {email: $('#user').val(), pass: $('#passw').val()},
+		success: function(response) {
+			console.log(response);
+			if(response.mensaje === 'Inactivo'){
+				$('#InacUser').modal('show');
+			}
+			if(response.mensaje === 'Incorrecto'){
+				$('#IncorrectPass').modal('show');
+			}
+			if(response.mensaje === 'Ok'){
+				window.location = '/login';
+			}
+		}
+	});
 }
 
 function getUser() {

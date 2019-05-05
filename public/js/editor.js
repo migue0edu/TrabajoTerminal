@@ -16,7 +16,9 @@ $('#summernote').summernote({
             ['debug', ['codeview']]
         ]
       });
-$(document).ready()
+$(document).ready(function () {
+    $('#summernote').summernote('code', document.cookie.split('texto=')[1]);
+});
 
 $(".note-btn").click(function () {
     let contenido = $('#summernote').summernote('code');
@@ -25,11 +27,14 @@ $(".note-btn").click(function () {
 });
 
  $('#summernote').on('summernote.init', function() {
+
+     cargarDatos();
      updated = false;
      if(TogetherJS.require("peers").getAllPeers(true).length > 0){
          TogetherJS.send({type: "cargarDatos"});
      }else{
          updated = true;
+
      }
  });
 
@@ -80,7 +85,7 @@ let htmlCompartir = '<form action="/enviarInvitacion" method="post">'
     +'<input id="url" name="urlDoc" type="hidden" >'
     +'<br>'
     +'<div class="input-group-append">'
-    +'<div style="text-align: center;"><input class="btn-sm btn-dark" type="submit" value="Compartir"></div>'
+    +'<div style="text-align: center;"><input class="btn-sm btn-dark" type="button" onclick="guardarDocumento()">Compartir</div>'
     +'</div>'
     +'</div>'
     +'</form>';
@@ -124,10 +129,11 @@ $(function () {
 });
 
 let htmlGuardar =
-    '<form action="/documento/update" method="post">'
+    '<form action="/documento/update" method="post" id="guardarPopover">'
     +'<div class="input-group-sm mb-3">'
-    +'<input id="" name="correo" type="text" class="form-control" placeholder="Nombre del documento" aria-label="Recipient\'s username" aria-describedby="basic-addon2"> '
+    +'<input id="nombre" name="nombre" type="text" class="form-control" placeholder="Nombre del documento" aria-label="Recipient\'s username" aria-describedby="basic-addon2"> '
     +'<br>'
+    +'<input id="text" name="texto" class="form-control" type="hidden">'
     +'<div class="input-group-append">'
     +'<div style="text-align: center;"><input class="btn btn-outline-dark btn-sm" type="submit" value="Guardar"></div> '
     +'</div>'
@@ -155,6 +161,26 @@ function nuevoDocumento(){
     }
 }
 
+function uardarDocumento() {
+    let contenido = $('#summernote').summernote('code');
+    $('#text').val(contenido);
+    $('#guardarPopover').submit();
+
+
+}
+
+function guardarDocumento() {
+    $('#text').val(contenido);
+    $.ajax({
+        url: '/documento/update',
+        type: 'POST',
+        data: {texto: $('#summernote').summernote('code'), nombre: $('#nombre').val()},
+        success: function(response) {
+            $('titulo').html('Guardado');
+        }
+    });
+}
+
 function cerrarDocumento(){
     if(confirm('Desea guardar cambios?')){
         console.log('Guardado!')
@@ -164,45 +190,45 @@ function cerrarDocumento(){
     }  
 }
 
-function crearDocumento(){
-    if(guardado === false){
-        $.ajax({
-            url: `documento/save`,
-            type: 'post',
-            dataType: 'jsonp',
-            jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-            success: function (data) {
-                console.log('success', data);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log('error', errorThrown);
-            }
-        });
-    }
-    else{
-        $.ajax({
-            url: `documento/update/`,
-            type: 'post',
-            dataType: 'json',
-            jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-            success: function (data) {
-                console.log('success', data);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log('error', errorThrown);
-            }
-        });
-    }
-
-}
-function guardarDocumento(){
-    let texto =  $('#summernote').summernote('code');
-    $("#text").val(texto);
-    let id = document.cookie.split('=')[2];
-    $("#idocument").val(id);
-    $("#save").submit();
-
-}
+// function crearDocumento(){
+//     if(guardado === false){
+//         $.ajax({
+//             url: `documento/save`,
+//             type: 'post',
+//             dataType: 'jsonp',
+//             jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+//             success: function (data) {
+//                 console.log('success', data);
+//             },
+//             error: function (XMLHttpRequest, textStatus, errorThrown) {
+//                 console.log('error', errorThrown);
+//             }
+//         });
+//     }
+//     else{
+//         $.ajax({
+//             url: `documento/update/`,
+//             type: 'post',
+//             dataType: 'json',
+//             jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
+//             success: function (data) {
+//                 console.log('success', data);
+//             },
+//             error: function (XMLHttpRequest, textStatus, errorThrown) {
+//                 console.log('error', errorThrown);
+//             }
+//         });
+//     }
+//
+// }
+// function guardarDocumento(){
+//     let texto =  $('#summernote').summernote('code');
+//     $("#text").val(texto);
+//     let id = document.cookie.split('=')[2];
+//     $("#idocument").val(id);
+//     $("#save").submit();
+//
+// }
 
 function setPropietary(name) {
     propietary = TogetherJS.require("peers").Self.name;

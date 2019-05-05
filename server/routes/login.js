@@ -7,18 +7,30 @@ app.use(session({ secret: 'guinea pig', cookie: { maxAge: 60*1000 }, resave: fal
 
 app.post('/login', (req, res) => {
     if(req.session.user){
-        return res.redirect('/documento');
+        return res.json({
+            mensaje: 'Ok'
+        });
     }
 
     let body = req.body;
+    console.log(body);
     Usuario.findOne({  Correo: body.email },(err,UsuarioDB) =>{
-
             if(err){
-                return res.status(400).json({err});
+                return res.json({
+                    err
+                });
             }
 
             if(!UsuarioDB){
-                return res.json({err : {mensaje: 'Usuario no encontrado'}});
+                return res.json({
+                    mensaje: 'Incorrecto'
+                });
+            }
+
+            if(UsuarioDB.Estatus === false){
+                return res.json({
+                    mensaje: 'Inactivo'
+                });
             }
 
            if (UsuarioDB.Contrasena === body.pass && UsuarioDB.Estatus === true) {
@@ -26,13 +38,28 @@ app.post('/login', (req, res) => {
                //Crear pagina de sesion donde aprecen los documentos creados del usuario
                req.session.userName = UsuarioDB.Nombre;
                req.session.user = `${UsuarioDB._id}`;
-               res.redirect(`/documento`);
+               return res.json({
+                   mensaje: 'Ok'
+               });
+               //return res.redirect(`/documento`);
 
            }else{
-                    res.sendFile(path.resolve(__dirname,"../../public/index.html"));
+                return res.json({
+                    mensaje: 'Incorrecto'
+                })
+                    //res.sendFile(path.resolve(__dirname,"../../public/index.html"));
            }
 
     })
+});
+
+app.get('/login', (req, res) => {
+    if(req.session.user){
+        return res.redirect('/documento');
+    }
+    else{
+        return res.redirect('/');
+    }
 });
 
 

@@ -28,27 +28,20 @@ app.get('/documento/create', async function (req, res) {
     res.redirect('/editor');
 });
 
-// app.post('/documento/save', (req, res) => {
-//    req.session.tempDoc.save((err, doc) => {
-//        req.session.guardado = true;
-//        if(!err)
-//            res.status(201).json({
-//                guardado: req.session.guardado
-//            });
-//    })
-// });
 
-app.post('/documento/update', (req, res) => {
+app.post('/documento/update', async (req, res) => {
     let body = req.body;
-    let id = body.idocument;
+    let id = req.session.documentID;
     let texto = body.texto;
+    let fecha = Date.now();
     console.log('Body: ', body);
-    Documento.findOneAndUpdate( id, {new: true, texto, runValidators: true}, (err, DocumentoDB) => {
+    let doc = await Documento.findOneAndUpdate(id, {new: true, texto, fecha, runValidators: true}, (err, DocumentoDB) => {
        if(!DocumentoDB){
            return res.status(400).json({
                ok: false,
                err
            });
+           req.session.texto = DocumentoDB.Texto;
        }
 
        res.redirect('/editor');
@@ -56,4 +49,33 @@ app.post('/documento/update', (req, res) => {
     res.status(201);
 });
 
+app.get('/documento/load/:id', async (req, res) => {
+   let documentId = req.params.id;
+   if(!documentId){
+       return res.redirect('/documento');
+   }
+   let doc = await Documento.findById(documentId, (err, documentoDB) => {
+      if(err){
+          return res.status(400);
+      }
+      req.session.documentID = documentoDB._id;
+      // req.session.Texto = documentoDB.Texto;
+      // req.session.Titulo = documentoDB.Titulo;
+      res.redirect('/editor');
+   });
+
+});
+
 module.exports = app;
+
+app.get('/documento/loadAll', async (req, res) => {
+   let userId = req.session.user;
+   let docs = await Documento.find({Propietario: userId}).exec((err, documentos) => {
+       if(err){
+           return res.status(500);
+       }
+       console.log('loadAll:' + JSON.stringify(documentos));
+       res.json(JSON.stringify(documentos));
+   });
+
+});
