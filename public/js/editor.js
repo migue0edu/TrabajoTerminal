@@ -1,3 +1,19 @@
+let comentario = function (context) {
+    let ui = $.summernote.ui;
+
+    // create button
+    let button = ui.button({
+        contents: '<i class="fa fa-child"/> Comentar',
+        tooltip: 'Agregar Comentario',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            alert('ok');
+        }
+    });
+    return button.render();   // return button as jquery object
+    $toolbar.append(this.$button);
+};
+ var jbutton;
 
 $('#summernote').summernote({
         placeholder: 'Introduzca su texto aquí.',
@@ -13,8 +29,12 @@ $('#summernote').summernote({
             ['color', ['color']],
             ['para', ['style', 'ul', 'ol', 'paragraph', 'height']],
             ['tools', ['table', 'hr', 'picture', 'link']],
-            ['debug', ['codeview']]
-        ]
+            ['debug', ['codeview']],
+            ['comment', ['comentario']]
+        ],
+        buttons: {
+            comentario: jbutton
+        }
       });
 $(document).ready(function () {
     $('#summernote').summernote('code', document.cookie.split('texto=')[1]);
@@ -27,6 +47,19 @@ $(".note-btn").click(function () {
 });
 
  $('#summernote').on('summernote.init', function() {
+     //comentario(this);
+     let ui = $.summernote.ui;
+
+     // create button
+     let button = ui.button({
+         contents: '<i class="fa fa-child"/> Comentar',
+         tooltip: 'Agregar Comentario',
+         click: function () {
+             // invoke insertText method with 'hello' on editor module.
+             alert('ok');
+         }
+     });
+     jbutton = button.render();
 
      cargarDatos();
      updated = false;
@@ -85,7 +118,7 @@ let htmlCompartir = '<form action="/enviarInvitacion" method="post">'
     +'<input id="url" name="urlDoc" type="hidden" >'
     +'<br>'
     +'<div class="input-group-append">'
-    +'<div style="text-align: center;"><input class="btn-sm btn-dark" type="button" onclick="guardarDocumento()">Compartir</div>'
+    +'<div style="text-align: center;"><input class="btn-sm btn-dark" value ="Compartir" type="button" onclick="compartirDocumento()"></div>'
     +'</div>'
     +'</div>'
     +'</form>';
@@ -93,7 +126,7 @@ $(function () {
     $("#compartir").popover({
         title: 'Correo electronico:',
         content: htmlCompartir,
-        trigger: 'focus',
+        trigger: 'click',
         placement: 'bottom',
         html: true
     })
@@ -102,6 +135,7 @@ $('#compartir').on('shown.bs.popover', function () {
     $("#url").val(TogetherJS.shareUrl());
     console.log(TogetherJS.shareUrl());
 });
+
 $('#correo').click(function () {
 
 });
@@ -161,16 +195,7 @@ function nuevoDocumento(){
     }
 }
 
-function uardarDocumento() {
-    let contenido = $('#summernote').summernote('code');
-    $('#text').val(contenido);
-    $('#guardarPopover').submit();
-
-
-}
-
 function guardarDocumento() {
-    $('#text').val(contenido);
     $.ajax({
         url: '/documento/update',
         type: 'POST',
@@ -186,49 +211,25 @@ function cerrarDocumento(){
         console.log('Guardado!')
     }
     else{
-        window.location.href = "index.html";
+        window.location.href = "/documento";
     }  
 }
 
-// function crearDocumento(){
-//     if(guardado === false){
-//         $.ajax({
-//             url: `documento/save`,
-//             type: 'post',
-//             dataType: 'jsonp',
-//             jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-//             success: function (data) {
-//                 console.log('success', data);
-//             },
-//             error: function (XMLHttpRequest, textStatus, errorThrown) {
-//                 console.log('error', errorThrown);
-//             }
-//         });
-//     }
-//     else{
-//         $.ajax({
-//             url: `documento/update/`,
-//             type: 'post',
-//             dataType: 'json',
-//             jsonp: 'jsonp', // mongod is expecting the parameter name to be called "jsonp"
-//             success: function (data) {
-//                 console.log('success', data);
-//             },
-//             error: function (XMLHttpRequest, textStatus, errorThrown) {
-//                 console.log('error', errorThrown);
-//             }
-//         });
-//     }
-//
-// }
-// function guardarDocumento(){
-//     let texto =  $('#summernote').summernote('code');
-//     $("#text").val(texto);
-//     let id = document.cookie.split('=')[2];
-//     $("#idocument").val(id);
-//     $("#save").submit();
-//
-// }
+function compartirDocumento() {
+    $.ajax({
+        url: '/enviarInvitacion',
+        type: 'POST',
+        data: {correo: $('#correo').val(), urlDoc: TogetherJS.shareUrl()},
+        success: function(response) {
+            console.log(('Correo enviado!'));
+        }
+    });
+}
+
+function crearComentario() {
+    let textoSeleccionado = $('#summernote').summernote('createRange');
+    console.log(textoSeleccionado.toString());
+}
 
 function setPropietary(name) {
     propietary = TogetherJS.require("peers").Self.name;

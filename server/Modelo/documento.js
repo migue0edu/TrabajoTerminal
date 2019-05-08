@@ -18,7 +18,7 @@ let documentoSchema = new Schema({
 	},
 
 	PersonasCompartidas: {
-		type:       [Schema.Types.ObjectId],
+		type:       [String],
 		required:   false
 	},
 

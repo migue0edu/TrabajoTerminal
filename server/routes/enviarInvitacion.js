@@ -3,6 +3,7 @@ const path = require('path');
 var nodemailer = require('nodemailer');
 var ip = require('ip');
 const app = express();
+const Documento = require('../Modelo/documento');
 
 app.post('/enviarInvitacion', (req, res) => {
     let body = req.body;
@@ -10,6 +11,7 @@ app.post('/enviarInvitacion', (req, res) => {
     let myIp = ip.toString(new Buffer(ip.toBuffer(ip.address())));
     let url = body.urlDoc;
     console.log(myIp, body);
+
 
     let textohtml =   '<div>'
                     +   '<h1>Se le ha invitado para colaborar en el siguiente documento: DocumentoPrueba</h1>'
@@ -40,6 +42,14 @@ app.post('/enviarInvitacion', (req, res) => {
             console.log(error);
         } else {
             console.log('Email sent: ' + info.response);
+            Documento.update({_id: req.session.documentID}, {$push: {PersonasCompartidas: [body.correo]}}, (error, writeOpResult) => {
+                if(error){
+                    console.log(error);
+                }
+                else{
+                    console.log('Actualizado');
+                }
+            });
         }
     });
     res.redirect('/editor');

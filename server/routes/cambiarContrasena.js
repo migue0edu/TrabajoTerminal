@@ -3,9 +3,9 @@ const path = require('path');
 const app = express();
 const Usuario = require('../Modelo/usuario');
 
-app.post('/recuperarContrasena', (req, res) =>{
-	let id = req.body.id;
-	console.log(req.body.id);
+app.post('/recuperarContrasena/', (req, res) =>{
+	let id = req.body.user;
+	console.log('user' + req.body.user);
 	res.cookie('user', id);
 	res.sendFile(path.resolve(__dirname,"../../public/RecuperarContrasena2.html"));
 

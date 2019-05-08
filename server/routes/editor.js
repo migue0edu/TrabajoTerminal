@@ -7,9 +7,9 @@ const Documento = require('../Modelo/documento');
 
 
 app.get('/editor', async function (req, res) {
-    // if(!req.session.user){
-    //     return res.redirect('/');
-    // }
+    if(!req.session.user){
+        return res.redirect('/');
+    }
 
     // req.session.save(()=>{
     //     console.log(`${req.session.id}: Session saved`);

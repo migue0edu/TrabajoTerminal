@@ -66,8 +66,6 @@ app.get('/documento/load/:id', async (req, res) => {
 
 });
 
-module.exports = app;
-
 app.get('/documento/loadAll', async (req, res) => {
    let userId = req.session.user;
    let docs = await Documento.find({Propietario: userId}).exec((err, documentos) => {
@@ -79,3 +77,23 @@ app.get('/documento/loadAll', async (req, res) => {
    });
 
 });
+
+app.get('/documento/loadAllShared', async (req, res) => {
+    let sharedUser = "";
+    let userId = req.session.user;
+    let user = await Usuario.findById(userId, (err, user) => {
+        sharedUser = user.Correo;
+
+    });
+    console.log('SharedUser:' + user.Correo);
+   let docs = await Documento.find({PersonasCompartidas: sharedUser}).exec((err, documentos) => {
+       if(err){
+           return res.status(500);
+       }
+       console.log('loadAllShared:' + JSON.stringify(documentos));
+       res.json(JSON.stringify(documentos));
+   });
+
+});
+
+module.exports = app;
