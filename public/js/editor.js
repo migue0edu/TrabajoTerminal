@@ -1,24 +1,53 @@
-let comentario = function (context) {
-    let ui = $.summernote.ui;
+var seleccion;
+var docSel;
+var actRef;
 
-    // create button
-    let button = ui.button({
-        contents: '<i class="fa fa-child"/> Comentar',
-        tooltip: 'Agregar Comentario',
-        click: function () {
-            // invoke insertText method with 'hello' on editor module.
-            alert('ok');
+var CommentButton = function() {
+    var ui = $.summernote.ui;
+    var button = ui.button({
+        contents: '<div id="comentButton"></div> Sugerir cambio',
+        //tooltip: 'Selecciona texto que desea cambiar.',
+        click: function() {
+            $('#summernote').summernote('backColor', TogetherJS.require('peers').Self.color);
+            docSel = document.getSelection();
+            seleccion = $('#summernote').summernote('createRange');
+            actRef = Date.now();
+            docSel.anchorNode.parentElement.className = `commentario ${actRef}`;
+            docSel.extentNode.parentElement.className = `commentario ${actRef}`;
+            docSel.extentNode.parentElement.setAttribute('onclick', `createListener(${actRef})`);
+            //docSel.anchorNode.parentElement.addEventListener('onclick', function(actRef){
+            //    console.log('click');
+            //    obterTexto(actRef);
+            //});
+            asignarClase(actRef);
+            //createListener(actRef);
+            //$('[data-toggle="tooltip"]').tooltip();
+            //  let sel = $('.note-editable span');
+            //  sel.click(function (actRef) {
+            //       console.log('click');
+            //       obterTexto(actRef)
+            //   });
+            // let sel = $('.commentario');
+            //
+            // for (let i = 0; i < sel.length; i++) {
+            //     let selText = sel[i].className.split(' ')[1];
+            //     sel.click(function (selText){
+            //         console.log(selText);
+            //         obterTexto(selText)
+            // })
+            //
+            //
+            // }
         }
     });
-    return button.render();   // return button as jquery object
-    $toolbar.append(this.$button);
+
+    return button.render();
 };
- var jbutton;
 
 $('#summernote').summernote({
         placeholder: 'Introduzca su texto aquí.',
         tabsize: 5,
-        height: 550,
+        height: 500,
         lang: 'es-ES',
         toolbar: [
             // [groupName, [list of button]]
@@ -28,16 +57,16 @@ $('#summernote').summernote({
             ['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['style', 'ul', 'ol', 'paragraph', 'height']],
-            ['tools', ['table', 'hr', 'picture', 'link']],
-            ['debug', ['codeview']],
-            ['comment', ['comentario']]
+            ['tools', ['table', 'hr', 'picture', 'link', 'comentario']],
+            ['debug', ['codeview']]
         ],
         buttons: {
-            comentario: jbutton
+            comentario: CommentButton
         }
       });
 $(document).ready(function () {
-    $('#summernote').summernote('code', document.cookie.split('texto=')[1]);
+    //$('#summernote').summernote('code', document.cookie.split('texto=')[1]);
+    cargarDatos();
 });
 
 $(".note-btn").click(function () {
@@ -47,27 +76,13 @@ $(".note-btn").click(function () {
 });
 
  $('#summernote').on('summernote.init', function() {
-     //comentario(this);
-     let ui = $.summernote.ui;
-
-     // create button
-     let button = ui.button({
-         contents: '<i class="fa fa-child"/> Comentar',
-         tooltip: 'Agregar Comentario',
-         click: function () {
-             // invoke insertText method with 'hello' on editor module.
-             alert('ok');
-         }
-     });
-     jbutton = button.render();
-
-     cargarDatos();
      updated = false;
      if(TogetherJS.require("peers").getAllPeers(true).length > 0){
          TogetherJS.send({type: "cargarDatos"});
-     }else{
          updated = true;
-
+     }else{
+         cargarDatos();
+         updated = true;
      }
  });
 
@@ -76,7 +91,7 @@ $('#summernote').on('summernote.focus', function() {
         TogetherJS.send({type: "cargarDatos"});
         return;
     }
-    console.log('summernote\'s content is changed.');
+
     let contenido = $('#summernote').summernote('code');
     TogetherJS.send({type: "actualizarTexto", texto: contenido});
     sender = true;
@@ -88,13 +103,6 @@ $('#summernote').on('summernote.keyup', function(we, e) {
         TogetherJS.send({type: "actualizarTexto", texto: contenido});
         sender = true;
 
-});
-
-// summernote.blur
-$('#summernote').on('summernote.blur', function() {
-    let contenido = $('#summernote').summernote('code');
-    TogetherJS.send({type: "actualizarTexto", texto: contenido});
-    sender = true;
 });
 
 $('#summernote').on('summernote.paste', function(e) {
@@ -136,15 +144,11 @@ $('#compartir').on('shown.bs.popover', function () {
     console.log(TogetherJS.shareUrl());
 });
 
-$('#correo').click(function () {
-
-});
-
 let htmlText = '<div class="input-group-sm mb-3">'
     +'<span>Indique fecha y hora limite:</span>'
-    +'<input type="datetime-local">'
+    +'<input type="datetime-local" id="limite">'
     +'<br>'
-    +'<div style="text-align: center;"><button class="btn-sm btn-dark mt-3" type="button">Establecer</button></div>';
+    +'<div style="text-align: center;"><button  onclick="iniciarVotacion()" class="btn-sm btn-dark mt-3" type="button">Establecer</button></div>';
 
 $('.datepicker').datepicker({
     format: 'mm/dd/yyyy',
@@ -156,20 +160,19 @@ $(function () {
     $("#votacion").popover({
         title: 'Datos de la votación:',
         content: htmlText,
-        trigger: 'focus',
+        trigger: 'click',
         placement: 'bottom',
         html: true
     })
 });
 
 let htmlGuardar =
-    '<form action="/documento/update" method="post" id="guardarPopover">'
+    '<form  id="guardarPopover">'
     +'<div class="input-group-sm mb-3">'
-    +'<input id="nombre" name="nombre" type="text" class="form-control" placeholder="Nombre del documento" aria-label="Recipient\'s username" aria-describedby="basic-addon2"> '
+    +'<input id="nombre" name="titulo" type="text" class="form-control" placeholder="Nombre del documento" aria-label="Recipient\'s username" aria-describedby="basic-addon2"> '
     +'<br>'
-    +'<input id="text" name="texto" class="form-control" type="hidden">'
     +'<div class="input-group-append">'
-    +'<div style="text-align: center;"><input class="btn btn-outline-dark btn-sm" type="submit" value="Guardar"></div> '
+    +'<div style="text-align: center;"><input class="btn btn-outline-dark btn-sm" type="button"  onclick="guardarDocumento()" value="Guardar"></div> '
     +'</div>'
     +'</div>'
     +'</form>';
@@ -184,7 +187,22 @@ $(function () {
     })
 });
 
-//--------
+let htmlComentario2 = `
+    <textarea rows="5" cols="30" id="comText" placeholder="Comentario"></textarea>
+    <div style="text-align: center;"><input type="button" onclick="crearComentario()" value="Agregar" class="btn btn-outline-dark"></div>
+    `;
+
+$(function () {
+    $('#comentButton').parent().popover({
+        title: 'Agregar comentario',
+        content: htmlComentario2,
+        trigger:'click',
+        placement: 'bottom',
+        html: true
+    })
+});
+
+//----------------------------------------------------
 
 function nuevoDocumento(){
     if(confirm('Desea guardar cambios?')){
@@ -196,23 +214,23 @@ function nuevoDocumento(){
 }
 
 function guardarDocumento() {
+    $('#titulo').text($('#nombre').val());
     $.ajax({
         url: '/documento/update',
         type: 'POST',
-        data: {texto: $('#summernote').summernote('code'), nombre: $('#nombre').val()},
+        data: {texto: $('#summernote').summernote('code'), titulo: $('#nombre').val()},
         success: function(response) {
-            $('titulo').html('Guardado');
+            console.log(response);
         }
     });
+
 }
 
 function cerrarDocumento(){
     if(confirm('Desea guardar cambios?')){
         console.log('Guardado!')
     }
-    else{
-        window.location.href = "/documento";
-    }  
+    window.location.href = "/documento";
 }
 
 function compartirDocumento() {
@@ -227,13 +245,114 @@ function compartirDocumento() {
 }
 
 function crearComentario() {
-    let textoSeleccionado = $('#summernote').summernote('createRange');
-    console.log(textoSeleccionado.toString());
+    $('#summernote').summernote('backColor', TogetherJS.require('peers').Self.color);
+    let spans = $(`.note-editable span[class=${actRef}]`);
+    //spans[spans.length-1].parentElement.parentElement.append(document.createElement('br'));
+    $.ajax({
+        url: '/comentario/guardar',
+        type: 'POST',
+        data: {texto: $('#comText').val(), referencia: actRef},
+        success: function(response) {
+            console.log(response);
+        }
+    });
 }
 
-function setPropietary(name) {
-    propietary = TogetherJS.require("peers").Self.name;
-    //TogetherJS.require("peers").Self.update({name: "migue0mpx@gmail.com"});
-};
+function obterTexto(actRef) {
+    console.log(actRef);
+    $.ajax({
+        url: '/comentario/obtenerTexto',
+        data: {ref: actRef},
+        type: 'POST',
+        success: function (response) {
+            console.log('response:'+ response);
+            document.querySelector('#comTextToast').innerHTML = response.texto;
+            $('.toast').toast('show');
+        }
+    });
+}
 
-var guardado = false;
+function cargarDatos() {
+    $.ajax({
+        url: '/documento/loadDoc/' + document.cookie.split('documentoID=')[1].split(';')[0],
+        type: 'GET',
+        //data: {correo: $('#correo').val(), urlDoc: TogetherJS.shareUrl()},
+        success: function(response) {
+            $('#titulo').text(response.titulo);
+            $('#summernote').summernote('code', response.texto);
+            console.log(('Texto cargado!!'));
+            if(response.votacion === true){
+                $('#summernote').next().find(".note-editable").attr("contenteditable", false);
+            }
+            //asignarForms(response.votacion);
+        }
+    });
+}
+
+function iniciarVotacion(){
+    console.log();
+    //2019-05-13T03:10
+    $.ajax({
+        url: '/documento/update',
+        type: 'POST',
+        data: {texto: $('#summernote').summernote('code'), titulo: $('#titulo').text()},
+        success: function(response) {
+            console.log(response);
+        }
+    });
+    $.ajax({
+        url: '/votacion/iniciar',
+        type: 'POST',
+        data: {fecha: $('#limite').val(), urlDoc: TogetherJS.shareUrl()},
+        success: function(response) {
+            if(response.mensaje){
+                console.log(response.mensaje);
+            }
+        }
+    });
+}
+
+function asignarForms(votacion) {
+    let sel = $('.note-editable span');
+    for (let i = 0; i < sel.length; i++) {
+        if(!votacion)
+            createForm(sel[i].className.split(' ')[1]);
+        else
+            createForm2(sel[i].className.split(' ')[1]);
+        $(`.comentario.${sel[i].className.split(' ')[1]}`).mouseenter(function () {
+            $(`.${className}`).popover('show');
+        });
+    }
+}
+
+function asignarClase(actRef){
+    let sel = $('.note-editable span');
+    let inside = false;
+    for (let i = 0; i < sel.length; i++) {
+        if(sel[i].className == actRef){
+            inside = !inside;
+            continue;
+        }
+        if(inside){
+            sel[i].className = `commentario ${actRef}`;
+            continue;
+        }
+
+        //$('#commentario').setAttribute('data-toggle', 'popover');
+        //sel[i].setAttribute('data-trigger', 'manual');
+    }
+    // $(`.comentario.${actRef}`).attr('data-toggle', 'popover');
+    // $(`.comentario.${actRef}`).attr('data-trigger', 'manual');
+    //createForm(actRef);
+    //createListener(actRef);
+    //$(`.comentario.${actRef}`).mouseenter(function () {
+    //    $(`.${className}`).popover('show');
+    //});
+    //$(`.comentario.${actRef}`).mouseenter({className: actRef},createForm(actRef));
+}
+
+
+
+let createListener = (actRef) => {
+        obterTexto(actRef);
+};

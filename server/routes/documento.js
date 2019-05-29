@@ -5,6 +5,7 @@ const path = require('path');
 app.use(session({ secret: 'guinea pig', cookie: { maxAge: 3000*1000 }, resave: false, saveUninitialized: true}));
 const Documento = require('../Modelo/documento');
 const Usuario = require( '../Modelo/usuario');
+const VersionOld = require('../Modelo/VersionOld');
 
 app.get('/documento', function(req, res) {
     if(!req.session.user){
@@ -15,39 +16,84 @@ app.get('/documento', function(req, res) {
 });
 
 app.get('/documento/create', async function (req, res) {
-
-    // if(!req.session.user){
-    //     res.redirect('/');
-    // }
-    let nuevoDoc = new Documento({
+     if(!req.session.user){
+         res.redirect('/');
+     }
+     let nuevoDoc = new Documento({
         Propietario: req.session.user
-    });
+     });
 
-   let saveDocument =  await nuevoDoc.save();
-   req.session.documentID = saveDocument._id;
-    res.redirect('/editor');
+     let saveDocument =  await nuevoDoc.save();
+     req.session.documentID = saveDocument._id;
+     res.redirect('/editor');
 });
 
-
-app.post('/documento/update', async (req, res) => {
+app.post('/documento/update', (req, res) => {
     let body = req.body;
     let id = req.session.documentID;
-    let texto = body.texto;
-    let fecha = Date.now();
+    let Texto = body.texto;
+    let Titulo = body.titulo;
+    let Fecha = Date.now();
     console.log('Body: ', body);
-    let doc = await Documento.findOneAndUpdate(id, {new: true, texto, fecha, runValidators: true}, (err, DocumentoDB) => {
-       if(!DocumentoDB){
-           return res.status(400).json({
-               ok: false,
-               err
-           });
-           req.session.texto = DocumentoDB.Texto;
-       }
-
-       res.redirect('/editor');
+    let doc =  Documento.findByIdAndUpdate(id, {new: true, Titulo, Texto, Fecha, runValidators: true}, (err, DocumentoDB) => {
+        if(!DocumentoDB){
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+            return res.json({
+                mensaje: 'ok'
+            });
+        }
     });
-    res.status(201);
 });
+
+app.get('/documento/loadDoc/:id', (req, res) => {
+   let documentId = req.params.id;
+   if(!documentId){
+       return res.redirect('/documento');
+   }
+   if(req.session.old){
+       let oldDoc = VersionOld.find({DocOriginal: documentId, Version: req.session.ver}, (err, docOldDB) => {
+           if(err){
+               return res.status(400);
+           }
+           return res.json({
+               titulo: 'Version ' + req.session.ver,
+               texto: docOldDB.Texto,
+               votacion: true
+           });
+       });
+   }
+    let doc = Documento.findById(documentId, (err, documentoDB) => {
+        if(err){
+            return res.status(400);
+        }
+        return res.json({
+            titulo: documentoDB.Titulo,
+            texto: documentoDB.Texto,
+            votacion: documentoDB.Votacion
+        });
+    });
+});
+
+app.get('/documento/loadDocOld/:id/:ver', (req, res) => {
+    let documentId = req.params.id;
+    let documentVer = req.params.ver;
+    if(!documentId){
+        return res.redirect('/documento');
+    }
+    let doc = Versionold.find({DocOriginal: documentId, Version: documentVer}, (err, documentoOldDB) => {
+        if(err){
+            return res.status(400);
+        }
+        req.session.documentID = documentId;
+        req.session.ver = Version;
+        req.session.old = true;
+        res.redirect('/editor');
+    });
+});
+
 
 app.get('/documento/load/:id', async (req, res) => {
    let documentId = req.params.id;
@@ -59,8 +105,8 @@ app.get('/documento/load/:id', async (req, res) => {
           return res.status(400);
       }
       req.session.documentID = documentoDB._id;
-      // req.session.Texto = documentoDB.Texto;
-      // req.session.Titulo = documentoDB.Titulo;
+      //req.session.Texto = documentoDB.Texto;
+      //req.session.Titulo = documentoDB.Titulo;
       res.redirect('/editor');
    });
 
@@ -95,5 +141,6 @@ app.get('/documento/loadAllShared', async (req, res) => {
    });
 
 });
+
 
 module.exports = app;

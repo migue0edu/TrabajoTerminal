@@ -25,14 +25,20 @@ let documentoSchema = new Schema({
 	Version: {
 		type:       Number,
 		require:    true,
-		default:    1
-	},
+		default:    0
 
+
+	},
 	Fecha: {
 		type:       Number,
 		required:   true,
         default:    Date.now()
-}
+	},
+	Votacion: {
+		type: Boolean,
+		required: false,
+		default: false
+	}
 
 
 });

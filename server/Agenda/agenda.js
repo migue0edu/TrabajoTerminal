@@ -1,0 +1,103 @@
+const Agenda = require('agenda');
+//const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
+const nodemailer = require('nodemailer');
+const ip = require('ip');
+const Documento = require('../Modelo/documento');
+const Comentario = require('../Modelo/comentario');
+const Votacion = require('../Modelo/votacion');
+const VersionOld = require('../Modelo/VersionOld');
+
+const agenda = new Agenda({db: {address: process.env.URLDB}});
+
+agenda.define('terminarVotacion', {priority: 'high', concurrency: 10},  async (job, done) => {
+    //Attrs: correos, documentID
+    const {correos} = job.attrs.data;
+    const {documentID} = job.attrs.data;
+    ip.address();
+    let comentarios = [];
+
+    //Contar votos de los comentarios
+    let coment = await  Comentario.find({Documento: documentID, Puntuacion: {$gte: 1}},(err, coms) => {
+        for(let i=0;i<coms.length;i++){
+            comentarios.push({ref: coms[i].Referencia, text: coms[i].Texto});
+        }
+    });
+    let doc = await Documento.findById(documentID, (err, documentoDB) => {
+        if(err){
+            console.log(err);
+        }
+        let tempText = documentoDB.Texto;
+        tempText = tempText.split('<p>');
+        for (let i = 0; i < comentarios.length; i++) {
+
+        }
+    });
+
+
+    //Enviar notificación a los usuarios
+    let myIp = ip.toString(new Buffer(ip.toBuffer(ip.address())));
+    let url = documentID;
+
+    let textohtml =   '<div>'
+        +   '<h1>La votacion ha finalizado.</h1>'
+        +   '<hr>'
+        +   '<p>Acceda para ver la version generada.</p>'
+        +   '<div style="text-align: center;"><a href=\"http://'+myIp+':3000/'+url.split('3000/')[1]+'\">Abrir documento</a></div>'
+        + '</div>';
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'miguelrodriguezdev@gmail.com',
+            pass: 'Qwertyuiop0'
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    let mailOptions = {
+        from: 'miguelrodriguezdev@gmail.com',
+        to: correos.join(' ,'),
+        subject: 'Proceso de votacion',
+        text: 'That was easy!',
+        html: textohtml
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+
+    //Generar nueva version.
+    let docID;
+    let oldText;
+    let lastVersion;
+
+    let documento = await Documento.findByIdAndUpdate(documentID,{$inc: {Version: 1}}, {new: true}, (err, documentoDB) => {
+        if(err){
+            console.log(err);
+        }
+        docID = documentoDB._id;
+        oldText = documentoDB.Texto;
+        lastVersion = documentoDB.Version;
+    });
+    if(lastVersion === 0){
+        done();
+    }
+
+    let nuevoDoc = new VersionOld({
+       DocOriginal:  documentID,
+       Version: lastVersion,
+       Texto: oldText,
+    });
+
+    nuevoDoc.save();
+    done();
+});
+
+
+module.exports = agenda;

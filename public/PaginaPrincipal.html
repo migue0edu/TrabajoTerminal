@@ -19,14 +19,32 @@
       </style>
     </head>
     <body>
-    <div class="row mr-3">
-        <div class="col-6">
-            <h2 class="text-white mt-1">&nbsp &nbsp Bienvenido</h2>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a id="titulo" class="navbar-brand" href="#">Bienvenido</a>
+            <ul class="navbar-nav nav-pills mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link " href="/documento/create" >Crear nuevo documento </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Ayuda
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                        <a class="dropdown-item active" href="https://www.youtube.com/watch?v=OqoP2BxGF8I">Ver video tutorial</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav nav-pills navbar-right ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link " onclick="logout()">Cerrar Sesión</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-6 text-right">
-            <a href="/documento/create" class="btn btn-success btn-sm mt-3">Crear Nuevo Documento</a>
-        </div>
-    </div>
+    </nav>
     <div class="card-deck mt-4 ml-3 mr-3">
         <div class="card ">
             <div class="card-header">
@@ -71,16 +89,6 @@
                     </tr>
                     </thead>
                     <tbody id="misDocumentos">
-                    <!--<tr>-->
-                        <!--<td class="text-center">hh</td>-->
-                        <!--<td class="text-center">hh</td>-->
-                        <!--<td class="text-center">hh</td>-->
-                    <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td class="text-center">hh</td>-->
-                        <!--<td class="text-center">hh</td>-->
-                        <!--<td class="text-center">hh</td>-->
-                    <!--</tr>-->
                     </tbody>
                 </table>
             </div>
@@ -129,16 +137,7 @@
                     </tr>
                     </thead>
                     <tbody id="misDocumentosCompartidos">
-                    <tr>
-                        <td class="text-center">hh</td>
-                        <td class="text-center">hh</td>
-                        <td class="text-center">hh</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">hh</td>
-                        <td class="text-center">hh</td>
-                        <td class="text-center">hh</td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>

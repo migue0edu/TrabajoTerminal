@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 
+
 //Configuracion de Express
 //--
 app.use(bodyParser.json());
