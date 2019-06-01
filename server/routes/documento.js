@@ -49,7 +49,7 @@ app.post('/documento/update', (req, res) => {
 });
 
 app.get('/documento/loadDoc/:id', (req, res) => {
-   let documentId = req.params.id;
+   let documentId = req.session.documentID;
    if(!documentId){
        return res.redirect('/documento');
    }
@@ -83,12 +83,12 @@ app.get('/documento/loadDocOld/:id/:ver', (req, res) => {
     if(!documentId){
         return res.redirect('/documento');
     }
-    let doc = Versionold.find({DocOriginal: documentId, Version: documentVer}, (err, documentoOldDB) => {
+    let doc = VersionOld.find({DocOriginal: documentId, Version: documentVer}, (err, documentoOldDB) => {
         if(err){
             return res.status(400);
         }
         req.session.documentID = documentId;
-        req.session.ver = Version;
+        req.session.ver = documentVer;
         req.session.old = true;
         res.redirect('/editor');
     });
@@ -142,5 +142,9 @@ app.get('/documento/loadAllShared', async (req, res) => {
 
 });
 
+app.post('/document/getSessionDocumentID', (req, res) => {
+    console.log(req.session.documentID);
+    return res.json({id :req.session.documentID});
+});
 
 module.exports = app;

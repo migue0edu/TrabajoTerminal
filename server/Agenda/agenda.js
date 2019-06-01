@@ -16,6 +16,7 @@ agenda.define('terminarVotacion', {priority: 'high', concurrency: 10},  async (j
     const {documentID} = job.attrs.data;
     ip.address();
     let comentarios = [];
+    let newText = '';
 
     //Contar votos de los comentarios
     let coment = await  Comentario.find({Documento: documentID, Puntuacion: {$gte: 1}},(err, coms) => {
@@ -28,12 +29,25 @@ agenda.define('terminarVotacion', {priority: 'high', concurrency: 10},  async (j
             console.log(err);
         }
         let tempText = documentoDB.Texto;
-        tempText = tempText.split('<p>');
-        for (let i = 0; i < comentarios.length; i++) {
 
+        for (let i = 0; i < comentarios.length; i++) {
+            let targ = `createListener(${comentarios[i].ref})">`;
+            let startIndex = tempText.indexOf(targ);
+            let prevText = tempText.substring(0, startIndex+targ.length);
+            let longText = tempText.split(targ)[1].indexOf('</span>');
+            let postText = tempText.substring(prevText.length + longText);
+            newText = prevText + comentarios[i].text + postText;
         }
     });
+    console.log('comentarios:' + JSON.stringify(comentarios));
+    console.log(newText);
 
+    let newTextDoc = await Documento.findByIdAndUpdate(documentID,{new: true, Texto: newText}, (err, documentoDB) => {
+        if(err){
+            console.log(err);
+        }
+        console.log('Cambios realizados!');
+    });
 
     //Enviar notificación a los usuarios
     let myIp = ip.toString(new Buffer(ip.toBuffer(ip.address())));
@@ -77,7 +91,7 @@ agenda.define('terminarVotacion', {priority: 'high', concurrency: 10},  async (j
     let oldText;
     let lastVersion;
 
-    let documento = await Documento.findByIdAndUpdate(documentID,{$inc: {Version: 1}}, {new: true}, (err, documentoDB) => {
+    let documento = await Documento.findByIdAndUpdate(documentID,{$inc: {Version: 1}}, {new: true, Votacion: false}, (err, documentoDB) => {
         if(err){
             console.log(err);
         }
@@ -91,7 +105,7 @@ agenda.define('terminarVotacion', {priority: 'high', concurrency: 10},  async (j
 
     let nuevoDoc = new VersionOld({
        DocOriginal:  documentID,
-       Version: lastVersion,
+       Version: lastVersion-1,
        Texto: oldText,
     });
 

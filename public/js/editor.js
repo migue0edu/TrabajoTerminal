@@ -15,29 +15,7 @@ var CommentButton = function() {
             docSel.anchorNode.parentElement.className = `commentario ${actRef}`;
             docSel.extentNode.parentElement.className = `commentario ${actRef}`;
             docSel.extentNode.parentElement.setAttribute('onclick', `createListener(${actRef})`);
-            //docSel.anchorNode.parentElement.addEventListener('onclick', function(actRef){
-            //    console.log('click');
-            //    obterTexto(actRef);
-            //});
             asignarClase(actRef);
-            //createListener(actRef);
-            //$('[data-toggle="tooltip"]').tooltip();
-            //  let sel = $('.note-editable span');
-            //  sel.click(function (actRef) {
-            //       console.log('click');
-            //       obterTexto(actRef)
-            //   });
-            // let sel = $('.commentario');
-            //
-            // for (let i = 0; i < sel.length; i++) {
-            //     let selText = sel[i].className.split(' ')[1];
-            //     sel.click(function (selText){
-            //         console.log(selText);
-            //         obterTexto(selText)
-            // })
-            //
-            //
-            // }
         }
     });
 
@@ -230,6 +208,7 @@ function cerrarDocumento(){
     if(confirm('Desea guardar cambios?')){
         console.log('Guardado!')
     }
+
     window.location.href = "/documento";
 }
 
@@ -258,7 +237,7 @@ function crearComentario() {
     });
 }
 
-function obterTexto(actRef) {
+function obterTexto(actRef){
     console.log(actRef);
     $.ajax({
         url: '/comentario/obtenerTexto',
@@ -266,10 +245,51 @@ function obterTexto(actRef) {
         type: 'POST',
         success: function (response) {
             console.log('response:'+ response);
-            document.querySelector('#comTextToast').innerHTML = response.texto;
+            document.querySelector('#comTextToast').value = response.texto[0].Texto;
+            var element = document.querySelector('#comTextToast');
+            $(element).data('referencia', response.texto[0].Referencia);
+
+            if(!$('.card-block').attr('contenteditable')){
+                $('.toast-footer').hide();
+            }else{
+                $('.toast-footer').show();
+            }
             $('.toast').toast('show');
         }
     });
+}
+
+$(document).ready(function () {
+   $('#aceptar_sugerencia').click(function () {
+       apruebaSugerencia($('#comTextToast').data('referencia'));
+   });
+    $('#cancelar_sugerencia').click(function () {
+        cancelarSugerencia($('#comTextToast').data('referencia'));
+    });
+});
+
+function apruebaSugerencia(referencia) {
+    alert(referencia);
+    $.ajax({
+        url: '/comentario/emitirVoto',
+        data: {valor: 1, id: referencia},
+        type: 'POST',
+        success: function (response) {
+            console.log('Voto emitido');
+        }
+    })
+}
+
+function cancelarSugerencia(referencia) {
+    alert(referencia);
+    $.ajax({
+        url: '/comentario/emitirVoto',
+        data: {valor: -1, id: referencia},
+        type: 'POST',
+        success: function (response) {
+            console.log('Voto emitido');
+        }
+    })
 }
 
 function cargarDatos() {
@@ -278,11 +298,13 @@ function cargarDatos() {
         type: 'GET',
         //data: {correo: $('#correo').val(), urlDoc: TogetherJS.shareUrl()},
         success: function(response) {
+
             $('#titulo').text(response.titulo);
             $('#summernote').summernote('code', response.texto);
             console.log(('Texto cargado!!'));
             if(response.votacion === true){
                 $('#summernote').next().find(".note-editable").attr("contenteditable", false);
+
             }
             //asignarForms(response.votacion);
         }
@@ -312,18 +334,7 @@ function iniciarVotacion(){
     });
 }
 
-function asignarForms(votacion) {
-    let sel = $('.note-editable span');
-    for (let i = 0; i < sel.length; i++) {
-        if(!votacion)
-            createForm(sel[i].className.split(' ')[1]);
-        else
-            createForm2(sel[i].className.split(' ')[1]);
-        $(`.comentario.${sel[i].className.split(' ')[1]}`).mouseenter(function () {
-            $(`.${className}`).popover('show');
-        });
-    }
-}
+
 
 function asignarClase(actRef){
     let sel = $('.note-editable span');
@@ -338,17 +349,7 @@ function asignarClase(actRef){
             continue;
         }
 
-        //$('#commentario').setAttribute('data-toggle', 'popover');
-        //sel[i].setAttribute('data-trigger', 'manual');
     }
-    // $(`.comentario.${actRef}`).attr('data-toggle', 'popover');
-    // $(`.comentario.${actRef}`).attr('data-trigger', 'manual');
-    //createForm(actRef);
-    //createListener(actRef);
-    //$(`.comentario.${actRef}`).mouseenter(function () {
-    //    $(`.${className}`).popover('show');
-    //});
-    //$(`.comentario.${actRef}`).mouseenter({className: actRef},createForm(actRef));
 }
 
 

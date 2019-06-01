@@ -13,7 +13,6 @@ app.post('/comentario/guardar', async (req, res) => {
         res.redirect('/');
     }
     let body = req.body;
-
     let nuevoComentario = new Comentario({
        Propietario: req.session.user,
        Documento: req.session.documentID,
@@ -48,7 +47,7 @@ app.post('/comentario/obtenerTexto', (req, res) => {
         }
         console.log('/comentario/:id: '+comentarioDB);
         res.json({
-            texto: comentarioDB.Texto
+            texto: comentarioDB
         });
     })
 });
@@ -56,7 +55,7 @@ app.post('/comentario/obtenerTexto', (req, res) => {
 app.post('/comentario/emitirVoto', (req, res) => {
    let id = req.body.id;
    let valor = req.body.valor;
-   let comentario = Comentario.findByIdAndUpdate(id,{$inc: {Puntuacion: valor}},{new: true}, (err, comentarioDB) => {
+   let comentario = Comentario.findOneAndUpdate({Referencia: id},{$inc: {Puntuacion: valor}},{new: true}, (err, comentarioDB) => {
        if(err){
            return res.json(err);
        }

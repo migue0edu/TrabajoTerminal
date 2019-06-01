@@ -27,7 +27,6 @@ app.post('/votacion/iniciar', async (req,res) => {
            })
        }
        correos = documentoDB.PersonasCompartidas;
-
         console.log('votacion/iniciar/findById: ' + correos);
     });
     await setTimeout (()=>{},1000);
@@ -65,7 +64,7 @@ app.post('/votacion/iniciar', async (req,res) => {
     });
 
     agenda.start();
-    agenda.schedule('two minutes', 'terminarVotacion', {correos, documentID: documentId});
+    agenda.schedule('one minute', 'terminarVotacion', {correos, documentID: documentId});
 
 
 });
